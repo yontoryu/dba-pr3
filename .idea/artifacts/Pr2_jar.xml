@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="Pr2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pr2_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Pr2.jar">
+        <element id="module-output" name="Pr2" />
+      </element>
+      <element id="library" level="project" name="jade" />
+    </root>
+  </artifact>
+</component>
