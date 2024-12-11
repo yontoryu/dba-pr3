@@ -81,7 +81,7 @@ public class HandleVolunteerRequestBehaviour extends CyclicBehaviour {
                         //extract the position of the agent from the msg and check if it is santas position
                         //...
 
-                        reply.setContent("Hyvää joulua HoHoHo Nähdään pian");
+                        reply.setContent("Hyvää joulua HoHoHo! Nähdään pian");
                     } else {
                         reply.setPerformative(ACLMessage.NOT_UNDERSTOOD);
                         reply.setContent("Hyvää joulua What did you say? Nähdään pian");
