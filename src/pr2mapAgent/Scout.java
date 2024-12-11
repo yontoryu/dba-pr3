@@ -77,7 +77,7 @@ public class Scout extends Agent {
 
         try {
             // Step 3: Start your agent(s)
-            String agentName = "raccoonie"; // Name of your agent
+            String agentName = "scout"; // Name of your agent
             String agentClass = "pr2mapAgent.Scout"; // Fully qualified name of your agent class
 
             AgentController agent = mainContainer.createNewAgent(agentName, agentClass, args);

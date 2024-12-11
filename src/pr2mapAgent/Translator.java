@@ -6,7 +6,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.DFService;
 
-public class ElfTranslatorAgent extends Agent {
+public class Translator extends Agent {
     @Override
     protected void setup() {
         // Register Elf Translator in the Directory Facilitator
@@ -40,21 +40,18 @@ public class ElfTranslatorAgent extends Agent {
     private class TranslationBehaviour extends jade.core.behaviours.CyclicBehaviour {
         @Override
         public void action() {
-            ACLMessage msg = receive();
-            if (msg != null) {
-                // Translate messages
-                String translatedContent = translateMessage(msg.getContent());
+            ACLMessage msg = myAgent.blockingReceive();
 
-                // Create a new message with translated content
-                ACLMessage translatedMsg = new ACLMessage(msg.getPerformative());
-                translatedMsg.setContent(translatedContent);
-                translatedMsg.setSender(msg.getSender());
-                translatedMsg.addReceiver(msg.getSender());
+            // Translate messages
+            String translatedContent = translateMessage(msg.getContent());
 
-                send(translatedMsg);
-            } else {
-                block();
-            }
+            // Create a new message with translated content
+            ACLMessage translatedMsg = new ACLMessage(msg.getPerformative());
+            translatedMsg.setContent(translatedContent);
+            translatedMsg.setSender(msg.getSender());
+            translatedMsg.addReceiver(msg.getSender());
+
+            send(translatedMsg);
         }
 
         private String translateMessage(String message) {

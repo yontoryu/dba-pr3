@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class RudolphAgent extends Agent {
+public class Rudolph extends Agent {
     private Map<String, int[]> reindeerLocations = new HashMap<>();
     private int foundReindeerCount = 0;
     private String expectedSecretCode;
