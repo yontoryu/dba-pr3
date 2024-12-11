@@ -7,38 +7,6 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) {
-
-
-        // List of the maps
-        String[] mapFiles = {
-                "maps/mapWithDiagonalWall.txt",
-                "maps/mapWithHorizontalWall.txt",
-                "maps/mapWithVerticalWall.txt",
-                "maps/mapWithoutObstacle.txt",
-                "maps/mapWithComplexObstacle1.txt",
-                "maps/mapWithComplexObstacle2.txt",
-                "maps/mapWithComplexObstacle3.txt",
-                "maps/newMap.txt"
-        };
-
-        //show the list of map choices
-//        String selectedFile = (String) JOptionPane.showInputDialog(
-//                null,
-//                "Choose the map file:",
-//                "Choose map",
-//                JOptionPane.PLAIN_MESSAGE,
-//                null,
-//                mapFiles,
-//                mapFiles[0]
-//        );
-
-//        String selectedFile = JOptionPane.showInputDialog(
-//                null,
-//                "Enter the map file path (e.g., 'maps/mapWithDiagonalWall.txt'):",
-//                "Choose map",
-//                JOptionPane.PLAIN_MESSAGE
-//        );
-
         JFileChooser fileChooser = new JFileChooser();
 
         File defaultDirectory = new File("maps"); // Replace with your desired directory
