@@ -1,5 +1,10 @@
 package pr2mapAgent;
 
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.ContainerController;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,10 +48,15 @@ public class Main {
                 System.out.println("Start [" + glm.getStartPos()[0] + ", " + glm.getStartPos()[1] + "]");
                 System.out.println("Target [" + glm.getEndPos()[0] + ", " + glm.getEndPos()[1] + "]");
 
-                Object[] arguments = {glm.getStartPos(), glm.getEndPos(), env, glm};
+                Object[] arguments = {glm.getStartPos(), glm.getEndPos(), env};
                 Scout raccoon = new Scout();
 
-                raccoon.startAgent(arguments);
+                Runtime jadeRuntime = Runtime.instance();
+                Profile profile = new ProfileImpl();
+                ContainerController mainContainer = jadeRuntime.createMainContainer(profile);
+
+                raccoon.startAgent(arguments, mainContainer);
+
             }
             catch (Exception e) {
                 // Handle exceptions such as file not found or invalid file format

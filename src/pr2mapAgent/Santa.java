@@ -1,10 +1,16 @@
 package pr2mapAgent;
 
 import jade.core.Agent;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
 import jade.lang.acl.ACLMessage;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.DFService;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+
 import java.util.Random;
 
 public class Santa extends Agent {
@@ -15,20 +21,6 @@ public class Santa extends Agent {
 
     @Override
     protected void setup() {
-        // Register Santa in the Directory Facilitator
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("santa-service");
-        sd.setName("Santa-Claus-Agent");
-        dfd.addServices(sd);
-
-        try {
-            DFService.register(this, dfd);
-        } catch (Exception e) {
-            System.err.println("Error registering Santa agent: " + e.getMessage());
-        }
-
         // Add behavior to handle volunteer requests
         addBehaviour(new HandleVolunteerRequestBehaviour(this));
     }
@@ -62,12 +54,12 @@ public class Santa extends Agent {
         return msg.startsWith("Rakas Joulupukki") && msg.endsWith("Kiitos");
     }
 
-    @Override
-    protected void takeDown() {
+    public void startSanta(ContainerController mainContainer) {
         try {
-            DFService.deregister(this);
+            AgentController agent = mainContainer.createNewAgent("Santa", "pr2mapAgent.Santa", null);
+            agent.start(); // Start the agent
         } catch (Exception e) {
-            System.err.println("Error deregistering Santa agent: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

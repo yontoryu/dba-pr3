@@ -82,7 +82,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                         int[] santaPosition = santa.getPosition();
 
                         String content = msg.getContent();
-                        String agentPositionStr = content.substring(content.indexOf("(") + 1, content.indexOf(")"));
+                        String agentPositionStr = content.substring(content.indexOf("position (") + 10, content.indexOf(")"));
                         String[] parts = agentPositionStr.split(",\\s*");
                         int[] agentPosition = {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
 

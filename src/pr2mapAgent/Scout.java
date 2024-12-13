@@ -65,16 +65,7 @@ public class Scout extends Agent {
         return targetPos;
     }
 
-    void startAgent(Object[] args) {
-        // Step 1: Get the JADE runtime instance
-        Runtime jadeRuntime = Runtime.instance();
-
-        // Step 2: Create the main container (platform)
-        Profile profile = new ProfileImpl();
-//        profile.setParameter(Profile.GUI, "true"); // Enable the JADE GUI
-
-        ContainerController mainContainer = jadeRuntime.createMainContainer(profile);
-
+    void startAgent(Object[] args, ContainerController mainContainer) {
         try {
             // Step 3: Start your agent(s)
             String agentName = "scout"; // Name of your agent
