@@ -48,6 +48,9 @@ public class WalkBehaviour extends Behaviour {
 
     @Override
     public boolean done() {
+        //start new WalkBehaviour here, until the Agent has reached Santa
+        //...
+
         return goalReached;
     }
 
