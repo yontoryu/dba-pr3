@@ -1,12 +1,13 @@
 package pr2mapAgent;
 
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class HandleVolunteerRequestBehaviour extends CyclicBehaviour {
+public class HandleVolunteerRequestBehaviour extends Behaviour {
     Santa santa;
-    Scout scout;
+    boolean finished = false;
 
     HandleVolunteerRequestBehaviour(Santa santa) {
         this.santa = santa;
@@ -95,6 +96,7 @@ public class HandleVolunteerRequestBehaviour extends CyclicBehaviour {
                         reply.setContent("Hyvää joulua What did you say? Nähdään pian");
                     }
 
+                    finished = true;
                     myAgent.send(reply);
 
                 } else {
@@ -103,5 +105,10 @@ public class HandleVolunteerRequestBehaviour extends CyclicBehaviour {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean done() {
+        return finished;
     }
 }
