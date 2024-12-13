@@ -9,32 +9,17 @@ import jade.domain.DFService;
 public class Translator extends Agent {
     @Override
     protected void setup() {
-        // Register Elf Translator in the Directory Facilitator
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
+
         ServiceDescription sd = new ServiceDescription();
         sd.setType("translator-service");
         sd.setName("Elf-Translator-Agent");
-        dfd.addServices(sd);
 
-        try {
-            DFService.register(this, dfd);
-        } catch (Exception e) {
-            System.err.println("Error registering Elf Translator: " + e.getMessage());
-        }
 
         // Add behavior to handle translations
         addBehaviour(new TranslationBehaviour());
     }
 
-    @Override
-    protected void takeDown() {
-        try {
-            DFService.deregister(this);
-        } catch (Exception e) {
-            System.err.println("Error deregistering Elf Translator: " + e.getMessage());
-        }
-    }
+
 
     // Inner class for translation behavior
     private class TranslationBehaviour extends jade.core.behaviours.CyclicBehaviour {
