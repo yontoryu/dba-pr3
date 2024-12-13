@@ -48,7 +48,7 @@ public class Main {
                 System.out.println("Start [" + glm.getStartPos()[0] + ", " + glm.getStartPos()[1] + "]");
                 System.out.println("Target [" + glm.getEndPos()[0] + ", " + glm.getEndPos()[1] + "]");
 
-                Object[] arguments = {glm.getStartPos(), glm.getEndPos(), env};
+                Object[] arguments = {glm.getStartPos(), glm.getEndPos(), env, glm};
                 Scout raccoon = new Scout();
 
                 Runtime jadeRuntime = Runtime.instance();

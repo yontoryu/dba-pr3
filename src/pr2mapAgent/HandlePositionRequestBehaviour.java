@@ -28,11 +28,11 @@ public class HandlePositionRequestBehaviour extends Behaviour {
                     if (rudolph.verifyScout(secretCode)) {
                         // Agent is trustworthy
                         reply.setPerformative(ACLMessage.AGREE);
-                        reply.setContent("Bro Trustworthy agent accepted. I can give you the Reindeer's positions. En Plan");
+                        reply.setContent("Bro you're trustworthy. I can give you the Reindeer's positions. En Plan");
                     } else {
                         // Agent is not trustworthy
                         reply.setPerformative(ACLMessage.REFUSE);
-                        reply.setContent("Bro You're not trustworthy. En Plan");
+                        reply.setContent("Bro you're not trustworthy. En Plan");
                         myAgent.doDelete();
                     }
 
@@ -48,17 +48,20 @@ public class HandlePositionRequestBehaviour extends Behaviour {
             case 1 -> {
                 if (msg.getPerformative() == ACLMessage.REQUEST) {
                     ACLMessage reply = msg.createReply();
+                    int[] reindeerPosition = rudolph.findNextReindeer();
 
-                    String content = msg.getContent();
+                    if (reindeerPosition != null) {
+                        reply.setPerformative(ACLMessage.INFORM);
+                        reply.setContent(
+                                "Bro " + rudolph.getCurrentReindeerName() + " is at position (" + reindeerPosition[0] + ", " + reindeerPosition[1] + "). En Plan"
+                        );
+                    } else {
+                        reply.setPerformative(ACLMessage.CANCEL);
+                        reply.setContent("Bro you found everyone! En Plan");
 
-                    // Agent is trustworthy
-                    reply.setPerformative(ACLMessage.INFORM);
-
-
-                    reply.setContent("Bro Trustworthy agent accepted. I can give you the Reindeer's positions. En Plan");
-
-                    rudolph.setCommunicationState(1);
-
+                        finished = true;
+                        myAgent.doDelete();
+                    }
 
                     myAgent.send(reply);
 
@@ -69,7 +72,6 @@ public class HandlePositionRequestBehaviour extends Behaviour {
             }
         }
     }
-
 
     @Override
     public boolean done() {
