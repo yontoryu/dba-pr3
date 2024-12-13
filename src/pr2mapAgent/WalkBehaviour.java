@@ -31,7 +31,6 @@ public class WalkBehaviour extends Behaviour {
         current.setHCost(hh.manhattan(current));
 
         lastVisitiedNodes = new LinkedList<>();
-
     }
 
     @Override
