@@ -77,9 +77,17 @@ public class HandleVolunteerRequestBehaviour extends CyclicBehaviour {
                     if (santa.understood(msg.getContent())) {
                         reply.setPerformative(ACLMessage.INFORM);
 
-                        int[] position = santa.getPosition();
-                        //extract the position of the agent from the msg and check if it is santas position
-                        //...
+                        int[] santaPosition = santa.getPosition();
+
+                        String content = msg.getContent();
+                        String agentPositionStr = content.substring(content.indexOf("(") + 1, content.indexOf(")"));
+                        String[] parts = agentPositionStr.split(",\\s*");
+                        int[] agentPosition = {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
+
+                        if (!(santaPosition[0] == agentPosition[0] && santaPosition[1] == agentPosition[1])) {
+                            System.out.println("Error: Agent reached wrong position");
+                            myAgent.doDelete();
+                        }
 
                         reply.setContent("Hyvää joulua HoHoHo! Nähdään pian");
                     } else {
