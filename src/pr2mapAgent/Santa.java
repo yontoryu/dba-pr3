@@ -50,10 +50,6 @@ public class Santa extends Agent {
         return position;
     }
 
-    public boolean understood(String msg) {
-        return msg.startsWith("Rakas Joulupukki") && msg.endsWith("Kiitos");
-    }
-
     public void startSanta(ContainerController mainContainer) {
         try {
             AgentController agent = mainContainer.createNewAgent("Santa", "pr2mapAgent.Santa", null);

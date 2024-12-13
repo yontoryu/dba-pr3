@@ -1,10 +1,6 @@
 package pr2mapAgent;
 
 import jade.core.Agent;
-import jade.lang.acl.ACLMessage;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.DFService;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 
@@ -24,7 +20,7 @@ public class Translator extends Agent {
         }
     }
 
-    private String translateMessage(String message) {
+    public String translate(String message) {
         // Simple translation logic
         if (message.startsWith("Bro") && message.endsWith("En Plan")) {
             // Agent to Santa translation
