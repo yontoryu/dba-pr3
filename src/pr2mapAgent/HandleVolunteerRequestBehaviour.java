@@ -71,6 +71,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                 }
             }
 
+            //send 'HoHoHo' Msg to Agent if he reached Santas position
             case 2 -> {
                 if (msg.getPerformative() == ACLMessage.INFORM) {
                     ACLMessage reply = msg.createReply();
