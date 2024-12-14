@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Santa extends Agent {
     private Random trustRandom = new Random();
-    private String secretCode = "69420";
+    private String secretCode = "69420 xddd";
     private int state = 0;
     private int[] position;
 
@@ -50,7 +50,7 @@ public class Santa extends Agent {
         return position;
     }
 
-    public void startSanta(ContainerController mainContainer) {
+    public void startAgent(ContainerController mainContainer) {
         try {
             AgentController agent = mainContainer.createNewAgent("Santa", "pr2mapAgent.Santa", null);
             agent.start(); // Start the agent

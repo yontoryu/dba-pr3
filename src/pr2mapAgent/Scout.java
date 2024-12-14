@@ -1,8 +1,5 @@
 package pr2mapAgent;
 
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.core.Agent;
@@ -17,6 +14,9 @@ public class Scout extends Agent {
     int energy;
     int[] currentPos;
     int[] targetPos;
+    boolean finalState = false;
+    private int state = 0;
+    private String secretCode;
 
     private final List<PositionListener> listeners = new ArrayList<>(); // Observer list
 
@@ -43,6 +43,7 @@ public class Scout extends Agent {
         }
 
         //start walking
+        addBehaviour(new RequestSearchBehaviour(this));
         addBehaviour(new WalkBehaviour(this, env));
     }
 
@@ -63,6 +64,30 @@ public class Scout extends Agent {
 
     int[] getTargetPos() {
         return targetPos;
+    }
+
+    void setSecretCode(String code) {
+        secretCode = code;
+    }
+
+    boolean stopReached() {
+        return Arrays.equals(currentPos, targetPos);
+    }
+
+    void setCommunicationState(int state) {
+        this.state = state;
+    }
+
+    int getCommunicationState() {
+        return state;
+    }
+
+    void isFinalStop(){
+        this.finalState = true;
+    }
+
+    boolean finalStopReached() {
+        return stopReached() && finalState;
     }
 
     void startAgent(Object[] args, ContainerController mainContainer) {
@@ -95,7 +120,7 @@ public class Scout extends Agent {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            listener.onPositionUpdated(oldPos, currentPos, Arrays.equals(currentPos, targetPos), energy);
+            listener.onPositionUpdated(oldPos, currentPos, stopReached(), finalStopReached(), energy);
         }
     }
 }

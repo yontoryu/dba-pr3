@@ -23,7 +23,7 @@ public class HandlePositionRequestBehaviour extends Behaviour {
                     ACLMessage reply = msg.createReply();
 
                     String content = msg.getContent();
-                    String secretCode = content.substring(content.indexOf("Secret Code: ") + 13, content.indexOf(". En Plan"));
+                    String secretCode = content.substring(content.indexOf("secret Code: ") + 13, content.indexOf(". En Plan"));
 
                     if (rudolph.verifyScout(secretCode)) {
                         // Agent is trustworthy
@@ -40,7 +40,7 @@ public class HandlePositionRequestBehaviour extends Behaviour {
                     myAgent.send(reply);
 
                 } else {
-                    System.out.println("Error in the conversation protocol in state " + state);
+                    System.out.println("Error in the conversation protocol with Rudolph in state " + state);
                     myAgent.doDelete();
                 }
             }

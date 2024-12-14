@@ -13,15 +13,18 @@ public class TranslationBehaviour extends jade.core.behaviours.CyclicBehaviour {
     public void action() {
         ACLMessage msg = myAgent.blockingReceive();
 
-        // Translate messages
-        String translatedContent = translator.translate(msg.getContent());
+        if (msg.getPerformative() == ACLMessage.REQUEST) {
+            // Translate messages
+            String translatedContent = translator.translate(msg.getContent());
 
-        // Create a new message with translated content
-        ACLMessage translatedMsg = new ACLMessage(msg.getPerformative());
-        translatedMsg.setContent(translatedContent);
-        translatedMsg.setSender(msg.getSender());
-        translatedMsg.addReceiver(msg.getSender());
+            // Create a new message with translated content
+            ACLMessage translatedMsg = msg.createReply();
+            translatedMsg.setContent(translatedContent);
 
-        myAgent.send(translatedMsg);
+            myAgent.send(translatedMsg);
+        } else {
+            System.out.println("Error in the conversation protocol with Translator");
+            myAgent.doDelete();
+        }
     }
 }

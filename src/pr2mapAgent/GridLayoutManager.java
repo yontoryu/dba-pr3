@@ -119,25 +119,32 @@ public class GridLayoutManager extends JFrame implements PositionListener {
         }
     }
 
-    public void onPositionUpdated(int[] oldPos, int[] currentPos, boolean targetReached, int energy) {
-        if (!startSet || !endSet) {
-            JOptionPane.showMessageDialog(this, "Please set both start and target positions.");
+    public void onPositionUpdated(int[] oldPos, int[] currentPos, boolean stopReached, boolean targetReached, int energy) {
+        if (!startSet/* || !endSet*/) {
+            JOptionPane.showMessageDialog(this, "Please set start position.");
             return;
         }
 
-            if (targetReached) {
-                squares[currentPos[1]][currentPos[0]].setTarget(false);
-                squares[oldPos[1]][oldPos[0]].setRaccoon(false);
-                squares[currentPos[1]][currentPos[0]].setRaccoon(true);
-                gridPanel.repaint();
-                JOptionPane.showMessageDialog(null, "Raccoon reached the target with an energy of " + energy + ".");
+        if (targetReached) {
+            squares[currentPos[1]][currentPos[0]].setTarget(false);
+            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
+            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            gridPanel.repaint();
+            JOptionPane.showMessageDialog(null, "Scout reached the target with an energy of " + energy + ".");
 
-            } else if (!Arrays.equals(oldPos, currentPos)) {
-                System.out.println("Agent moved from [" + oldPos[0] + ", " + oldPos[1] + "] to [" + currentPos[0] + ", " + currentPos[1] + "]");
-                squares[oldPos[1]][oldPos[0]].setRaccoon(false);
-                squares[currentPos[1]][currentPos[0]].setRaccoon(true);
-                gridPanel.repaint();
-            }
+        } else if (stopReached) {
+            squares[currentPos[1]][currentPos[0]].setTarget(false);
+            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
+            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            gridPanel.repaint();
+            JOptionPane.showMessageDialog(null, "Scout reached stop with an energy of " + energy + ".");
+
+        } else if (!Arrays.equals(oldPos, currentPos)) {
+            System.out.println("Scout moved from [" + oldPos[0] + ", " + oldPos[1] + "] to [" + currentPos[0] + ", " + currentPos[1] + "]");
+            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
+            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            gridPanel.repaint();
+        }
     }
 
     private void resetPositions() {
@@ -177,7 +184,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                         startSet = true;
                     }
                     // Set target position if not set and it's not the start position
-                    else if (!endSet) {
+                    /* else if (!endSet) {
                         if (row == startPos[0] && col == startPos[1]) {
                             JOptionPane.showMessageDialog(null, "The target position cannot be the same as the start position.");
                         } else {
@@ -186,7 +193,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                             hasTarget = true;
                             endSet = true;
                         }
-                    }
+                    }*/
                     gridPanel.repaint();
                 }
             });

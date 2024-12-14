@@ -27,7 +27,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                     if (santa.isTrustworthyAgent()) {
                         // Agent is trustworthy
                         reply.setPerformative(ACLMessage.AGREE);
-                        reply.setContent("Hyvää joulua Trustworthy agent accepted. Secret code: " + santa.getSecretCode() + ". Nähdään pian");
+                        reply.setContent("Hyvää joulua you're trustworthy. Here's the secret code: " + santa.getSecretCode() + ". Nähdään pian");
                     } else {
                         // Agent is not trustworthy
                         reply.setPerformative(ACLMessage.REFUSE);
@@ -39,7 +39,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                     myAgent.send(reply);
 
                 } else {
-                    System.out.println("Error in the conversation protocol in state " + state);
+                    System.out.println("Error in the conversation protocol with Santa in state " + state);
                     myAgent.doDelete();
                 }
             }

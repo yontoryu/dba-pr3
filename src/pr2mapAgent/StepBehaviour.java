@@ -18,8 +18,8 @@ public class StepBehaviour extends OneShotBehaviour {
         discoverArea(wb.current);
 
 //        printHeuristic(aStarData.current);
-        printKnownGrid(wb.current);
-        System.out.println("------------------------------------------");
+//        printKnownGrid(wb.current);
+//        System.out.println("------------------------------------------");
 
         // Get the best neighbor for the next move
         Node nextMove = getBestStep(wb.current);

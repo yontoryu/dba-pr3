@@ -45,18 +45,23 @@ public class Main {
                     }
                 }
 
-                System.out.println("Start [" + glm.getStartPos()[0] + ", " + glm.getStartPos()[1] + "]");
-                System.out.println("Target [" + glm.getEndPos()[0] + ", " + glm.getEndPos()[1] + "]");
+//                System.out.println("Start [" + glm.getStartPos()[0] + ", " + glm.getStartPos()[1] + "]");
+//                System.out.println("Target [" + glm.getEndPos()[0] + ", " + glm.getEndPos()[1] + "]");
 
                 Object[] arguments = {glm.getStartPos(), glm.getEndPos(), env, glm};
-                Scout raccoon = new Scout();
+                Scout scout = new Scout();
+                Santa santa = new Santa();
+                Rudolph rudolph = new Rudolph();
+                Translator translator = new Translator();
 
                 Runtime jadeRuntime = Runtime.instance();
                 Profile profile = new ProfileImpl();
                 ContainerController mainContainer = jadeRuntime.createMainContainer(profile);
 
-                raccoon.startAgent(arguments, mainContainer);
-
+                santa.startAgent(mainContainer);
+                rudolph.startAgent(arguments, mainContainer);
+                translator.startAgent(mainContainer);
+                scout.startAgent(arguments, mainContainer);
             }
             catch (Exception e) {
                 // Handle exceptions such as file not found or invalid file format
