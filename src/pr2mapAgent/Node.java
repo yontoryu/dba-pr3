@@ -31,6 +31,12 @@ public class Node {
         this.isObstacle = isObstacle;
     }
 
+    public void resetHeuristicValues() {
+        this.gCost = Integer.MAX_VALUE;
+        this.hCost = 0;
+        this.penalty = 0;
+    }
+
     public int fCost() {
         return gCost + hCost + penalty;
     }

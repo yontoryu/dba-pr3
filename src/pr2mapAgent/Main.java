@@ -3,6 +3,7 @@ package pr2mapAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 
 import javax.swing.*;
@@ -56,6 +57,7 @@ public class Main {
 
                 Runtime jadeRuntime = Runtime.instance();
                 Profile profile = new ProfileImpl();
+//                profile.setParameter(Profile.GUI, "true");
                 ContainerController mainContainer = jadeRuntime.createMainContainer(profile);
 
                 santa.startAgent(mainContainer);

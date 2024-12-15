@@ -1,5 +1,7 @@
 package pr2mapAgent;
 
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.core.Agent;
@@ -10,13 +12,14 @@ import java.util.List;
 
 public class Scout extends Agent {
 
-    Environment env;
-    int energy;
-    int[] currentPos;
-    int[] targetPos;
-    boolean finalState = false;
-    private int state = 0;
+    private Environment env;
+    private int energy;
+    private int[] currentPos;
+    private int[] targetPos;
+    private boolean finalState = false;
+    private int state = 1; //commState = 0 --> Walking
     private String secretCode;
+    private int pace;
 
     private final List<PositionListener> listeners = new ArrayList<>(); // Observer list
 
@@ -28,13 +31,13 @@ public class Scout extends Agent {
     protected void setup() {
         // Retrieve startup arguments
         Object[] args = getArguments();
+        pace = 30;
 
         if (args != null && args.length > 0) {
             energy = -2;
-            targetPos = ((int[]) args[1]).clone();
             env = (Environment) args[2];
             setCurrentPos(((int[]) args[0]).clone());
-            System.out.println("Agent started with argument: Start - " + currentPos[0] + ", " + currentPos[1] + ", End - " + targetPos[0] + ", " + targetPos[1]);
+//            System.out.println("Agent started with argument: Start - " + currentPos[0] + ", " + currentPos[1] + ", End - " + targetPos[0] + ", " + targetPos[1]);
 
             PositionListener glm = (PositionListener) args[3];
             addPositionListener(glm);
@@ -64,6 +67,14 @@ public class Scout extends Agent {
 
     int[] getTargetPos() {
         return targetPos;
+    }
+
+    boolean targetIsSet() {
+        return targetPos != null;
+    }
+
+    void setTargetPos(int[] newPos) {
+        targetPos = newPos;
     }
 
     void setSecretCode(String code) {
@@ -116,11 +127,34 @@ public class Scout extends Agent {
     private void notifyPositionListeners(int[] oldPos, int[] currentPos) {
         for (PositionListener listener : listeners) {
             try {
-                Thread.sleep(300);
+                Thread.sleep(pace);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             listener.onPositionUpdated(oldPos, currentPos, stopReached(), finalStopReached(), energy);
         }
+    }
+
+    public String getTranslation(String content) {
+        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+        msg.setContent(content);
+        msg.setSender(getAID());
+        msg.addReceiver(new AID("Translator", AID.ISLOCALNAME));
+        send(msg);
+        System.out.println("TRANSLATION REQUEST SENT TO TRANSLATOR");
+
+        ACLMessage translatedMsg = blockingReceive();
+
+        return translatedMsg.getContent();
+    }
+
+    public void resetOnNewTarget() {
+        if (!finalStopReached()) {
+            addBehaviour(new WalkBehaviour(this, env));
+            setCommunicationState(4); //continue requesting the reindeer's positions
+        } else {
+            setCommunicationState(6); //ask for Santa's position
+        }
+        env.resetHeuristic();
     }
 }

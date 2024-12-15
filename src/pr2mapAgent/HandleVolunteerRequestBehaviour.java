@@ -23,6 +23,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
             case 0 -> {
                 if (msg.getPerformative() == ACLMessage.REQUEST) {
                     ACLMessage reply = msg.createReply();
+                    System.out.println("RECEIVED TRANSLATED SEARCH REQUEST FROM AGENT");
 
                     if (santa.isTrustworthyAgent()) {
                         // Agent is trustworthy
@@ -31,12 +32,13 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                     } else {
                         // Agent is not trustworthy
                         reply.setPerformative(ACLMessage.REFUSE);
-                        reply.setContent("Hyvää joulua Not trustworthy. Mission denied. Nähdään pian");
+                        reply.setContent("Hyvää joulua you're not trustworthy. Mission denied. Nähdään pian");
                     }
 
                     santa.setCommunicationState(1);
 
                     myAgent.send(reply);
+                    System.out.println("SECRET CODE SENT TO AGENT");
 
                 } else {
                     System.out.println("Error in the conversation protocol with Santa in state " + state);
@@ -54,9 +56,12 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                     reply.setContent("Hyvää joulua I am at position (" + position[0] + ", " + position[1] + "). Nähdään pian");
 
                     myAgent.send(reply);
+                    santa.setCommunicationState(2);
+
+                    System.out.println("RECEIVED AND REPLIED TO POSITION REQUEST");
 
                 } else {
-                    System.out.println("Error in the conversation protocol in state " + state);
+                    System.out.println("Error in the conversation protocol with Santa in state " + state);
                     myAgent.doDelete();
                 }
             }
@@ -85,9 +90,10 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
 
                     finished = true;
                     myAgent.send(reply);
+                    System.out.println("HOHOHO SENT");
 
                 } else {
-                    System.out.println("Error in the conversation protocol in state " + state);
+                    System.out.println("Error in the conversation protocol with Santa in state " + state);
                     myAgent.doDelete();
                 }
             }

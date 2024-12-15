@@ -103,7 +103,6 @@ public class StepBehaviour extends OneShotBehaviour {
         }
     }
 
-
     private void printKnownGrid(Node currentNode) {
         for (int ny = 0; ny < wb.env.getHeight(); ny++) {
             for (int nx = 0; nx < wb.env.getWidth(); nx++) {

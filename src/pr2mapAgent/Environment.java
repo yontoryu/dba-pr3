@@ -1,6 +1,6 @@
 package pr2mapAgent;
 
-import java.util.Random;
+import java.util.*;
 
 public class Environment {
 
@@ -47,5 +47,33 @@ public class Environment {
 
     public int getWidth() {
         return width;
+    }
+
+    public void resetHeuristic() {
+        for (int ny = 0; ny < getHeight(); ny++) {
+            for (int nx = 0; nx < getWidth(); nx++) {
+                if (yetDiscovered(nx, ny)) {
+                    getNode(nx, ny).resetHeuristicValues();
+                }
+            }
+        }
+    }
+
+    public java.util.Map<String, int[]> reindeerLocations() {
+        java.util.Map<String, int[]> reindeerLocations = new HashMap<>();
+        String[] reindeerNames = {"Dasher", "Dancer", "Vixen", "Prancer", "Cupid", "Comet", "Blitzen", "Donner"};
+        Random random = new Random();
+        Set<String> usedPositions = new HashSet<>();
+
+        // generate unique positions
+        for (String name : reindeerNames) {
+            int[] position;
+            do {
+                position = new int[]{random.nextInt(width), random.nextInt(height)};
+            } while (!usedPositions.add(Arrays.toString(position)) && map.getMatrix()[position[0]][position[1]] == -1);
+            reindeerLocations.put(name, position);
+        }
+
+        return reindeerLocations;
     }
 }

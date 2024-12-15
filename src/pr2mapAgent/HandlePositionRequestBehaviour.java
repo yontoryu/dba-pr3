@@ -18,17 +18,22 @@ public class HandlePositionRequestBehaviour extends Behaviour {
         int state = rudolph.getCommunicationState();
 
         switch (state) {
+            //Reply to establish-connection-Request by Scout
             case 0 -> {
                 if (msg.getPerformative() == ACLMessage.REQUEST) {
                     ACLMessage reply = msg.createReply();
 
+                    System.out.println("RUDOLPH RECEIVED REQUEST");
+
                     String content = msg.getContent();
-                    String secretCode = content.substring(content.indexOf("secret Code: ") + 13, content.indexOf(". En Plan"));
+                    String secretCode = content.substring(content.indexOf("secret code: ") + 13, content.indexOf(". En Plan"));
 
                     if (rudolph.verifyScout(secretCode)) {
                         // Agent is trustworthy
                         reply.setPerformative(ACLMessage.AGREE);
                         reply.setContent("Bro you're trustworthy. I can give you the Reindeer's positions. En Plan");
+                        System.out.println("AGREE SENT TO AGENT");
+
                     } else {
                         // Agent is not trustworthy
                         reply.setPerformative(ACLMessage.REFUSE);
@@ -66,7 +71,7 @@ public class HandlePositionRequestBehaviour extends Behaviour {
                     myAgent.send(reply);
 
                 } else {
-                    System.out.println("Error in the conversation protocol in state " + state);
+                    System.out.println("Error in the conversation protocol with Rudolph in state " + state);
                     myAgent.doDelete();
                 }
             }
