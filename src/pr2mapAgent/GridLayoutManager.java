@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.border.LineBorder;
 import java.util.Arrays;
+import java.util.List;
 
 public class GridLayoutManager extends JFrame implements PositionListener {
 
@@ -23,12 +24,19 @@ public class GridLayoutManager extends JFrame implements PositionListener {
     private BufferedImage raccoonImage;
     private BufferedImage obstacleImage; // Image of obstacles (walls)
     private BufferedImage endImage; // Image of the target
+    private List<BufferedImage> stopImages = Arrays.asList();
 
     private boolean santaSet = false;
     private boolean startSet = false;
     private boolean positionsSet = false;
     private int[] startPos = new int[2];
     private int[] endPos = new int[2];  // Target position
+
+    private JTextArea chatArea; // Chat area for displaying messages
+
+    // List of reindeer names
+    private List<String> reindeerNames = Arrays.asList("Dasher", "Dancer", "Prancer", "Vixen", "Comet", "Cupid", "Donner");
+    private int reindeerIndex = 0;
 
     public GridLayoutManager(Map map) {
         super("GUI GridLayout Manager");
@@ -38,10 +46,22 @@ public class GridLayoutManager extends JFrame implements PositionListener {
 
         // Load images for cells
         try {
-            grassImage = ImageIO.read(new File("grass.png"));
-            raccoonImage = ImageIO.read(new File("raccoon2.png"));
-            obstacleImage = ImageIO.read(new File("wall.png"));
-            endImage = ImageIO.read(new File("stink.png"));
+            grassImage = ImageIO.read(new File("snow.png"));
+            raccoonImage = ImageIO.read(new File("agent.png"));
+            obstacleImage = ImageIO.read(new File("grass.png"));
+            endImage = ImageIO.read(new File("house.jpg"));
+
+            stopImages = Arrays.asList(
+                    ImageIO.read(new File("deer.png")),
+                    ImageIO.read(new File("deer2.png")),
+                    ImageIO.read(new File("deer3.png")),
+                    ImageIO.read(new File("deer4.png")),
+                    ImageIO.read(new File("deer5.png")),
+                    ImageIO.read(new File("deer6.png")),
+                    ImageIO.read(new File("deer7.png")),
+                    ImageIO.read(new File("deer8.png"))
+                    // Add more images as needed
+            );
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -74,16 +94,23 @@ public class GridLayoutManager extends JFrame implements PositionListener {
         // Add the button panel to the south
         add(buttonPanel, BorderLayout.SOUTH);
 
+        // Add the chat panel to the east
+        chatArea = new JTextArea(20, 30);
+        chatArea.setEditable(false);
+        JScrollPane chatScrollPane = new JScrollPane(chatArea);
+        chatScrollPane.setBorder(BorderFactory.createTitledBorder("Chat Messages"));
+        add(chatScrollPane, BorderLayout.EAST);
+
         // Finalize JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 800); // Adjust size as needed
+        setSize(1200, 800); // Adjust size to accommodate the chat area
         setVisible(true);
     }
 
     private void startRunning() {
         positionsSet = true;
+        appendToChat("Search started!");
     }
-
 
     public boolean positionsSet() {
         return positionsSet;
@@ -101,7 +128,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 squares[i][j] = new CellPanel(i, j);
-                squares[i][j].setBorder(new LineBorder(Color.BLACK, 1));
+                squares[i][j].setBorder(new LineBorder(Color.BLACK, 0));
                 setCellStyle(i, j); // Set initial cell style
                 gridPanel.add(squares[i][j]);
             }
@@ -117,6 +144,13 @@ public class GridLayoutManager extends JFrame implements PositionListener {
         }
     }
 
+    private String getNextReindeerName() {
+        if (reindeerIndex < reindeerNames.size()) {
+            return reindeerNames.get(reindeerIndex++);
+        }
+        return "Reached Santa!";
+    }
+
     public void onPositionUpdated(int[] oldPos, int[] currentPos, boolean stopReached, boolean targetReached, int energy) {
         if (!startSet || !santaSet) {
             JOptionPane.showMessageDialog(this, "Please set scout and santa position.");
@@ -128,17 +162,20 @@ public class GridLayoutManager extends JFrame implements PositionListener {
             squares[oldPos[1]][oldPos[0]].setScout(false);
             squares[currentPos[1]][currentPos[0]].setScout(true);
             gridPanel.repaint();
-            JOptionPane.showMessageDialog(null, "Scout reached the target with an energy of " + energy + ".");
+            appendToChat("Scout reached Santa " + energy);
 
         } else if (stopReached) {
-            squares[currentPos[1]][currentPos[0]].setTarget(false);
             squares[oldPos[1]][oldPos[0]].setScout(false);
             squares[currentPos[1]][currentPos[0]].setScout(true);
+            squares[currentPos[1]][currentPos[0]].setStopImage(null); // Remove the current stop image
+            if (reindeerIndex < stopImages.size()) {
+                squares[currentPos[1]][currentPos[0]].setStopImage(stopImages.get(reindeerIndex)); // Show next stop image
+            }
             gridPanel.repaint();
-            JOptionPane.showMessageDialog(null, "Scout reached stop with an energy of " + energy + ".");
+            String reindeerName = getNextReindeerName();
+            appendToChat("Scout found: " + reindeerName + ". Energy cost: " + energy);
 
         } else if (!Arrays.equals(oldPos, currentPos)) {
-//            System.out.println("Scout moved from [" + oldPos[0] + ", " + oldPos[1] + "] to [" + currentPos[0] + ", " + currentPos[1] + "]");
             squares[oldPos[1]][oldPos[0]].setScout(false);
             squares[currentPos[1]][currentPos[0]].setScout(true);
             gridPanel.repaint();
@@ -148,19 +185,28 @@ public class GridLayoutManager extends JFrame implements PositionListener {
     private void resetPositions() {
         startSet = false;
         santaSet = false;
+        reindeerIndex = 0; // Reset the reindeer index
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 squares[i][j].setScout(false);
                 squares[i][j].setTarget(false);
+                squares[i][j].setStopImage(null); // Clear stop images
             }
         }
         gridPanel.repaint();
+        appendToChat("Positions have been reset.");
+    }
+
+    public void appendToChat(String message) {
+        chatArea.append(message + "\n");
+        chatArea.setCaretPosition(chatArea.getDocument().getLength());
     }
 
     private class CellPanel extends JPanel {
         private int row, col;
         private boolean hasRaccoon = false;
         private boolean hasTarget = false;
+        private BufferedImage stopImage = null;
 
         public CellPanel(int row, int col) {
             this.row = row;
@@ -180,6 +226,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                         startPos[1] = row;
                         hasRaccoon = true;
                         startSet = true;
+                        appendToChat("Scout position set to: [" + col + ", " + row + "].");
                     }
                     // Set target position if not set and it's not the start position
                     else if (!santaSet) {
@@ -190,6 +237,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                             endPos[1] = row;
                             hasTarget = true;
                             santaSet = true;
+                            appendToChat("Santa position set to: [" + col + ", " + row + "].");
                         }
                     }
                     gridPanel.repaint();
@@ -203,6 +251,10 @@ public class GridLayoutManager extends JFrame implements PositionListener {
 
         public void setTarget(boolean hasTarget) {
             this.hasTarget = hasTarget;
+        }
+
+        public void setStopImage(BufferedImage stopImage) {
+            this.stopImage = stopImage;
         }
 
         @Override
@@ -220,6 +272,9 @@ public class GridLayoutManager extends JFrame implements PositionListener {
             }
             if (hasTarget) {
                 g.drawImage(endImage, 0, 0, getWidth(), getHeight(), null);
+            }
+            if (stopImage != null) {
+                g.drawImage(stopImage, 0, 0, getWidth(), getHeight(), null);
             }
         }
     }
