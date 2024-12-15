@@ -102,8 +102,8 @@ public class RequestSearchBehaviour extends Behaviour {
 
                 } else if (msg.getPerformative() == ACLMessage.CANCEL) {
                     System.out.println("FOUND LAST REINDEER, HEADING TO SANTA");
+                    scout.finalReindeerReached();
                     findSanta();
-                    scout.setCommunicationState(5);
                 } else {
                     System.out.println("Error in the conversation protocol with Scout in state " + state);
                     myAgent.doDelete();
@@ -142,8 +142,8 @@ public class RequestSearchBehaviour extends Behaviour {
             String[] parts = santaPositionStr.split(",\\s*");
             int[] santaPosition = {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
             scout.setTargetPos(santaPosition);
+
             scout.setCommunicationState(0);
-            scout.isFinalStop();
             System.out.println("HEADING TO SANTA AT POSITION: " + santaPosition[0] + ", " + santaPosition[1]);
 
         } else {
@@ -154,6 +154,6 @@ public class RequestSearchBehaviour extends Behaviour {
 
     @Override
     public boolean done() {
-        return scout.finalStopReached();
+        return scout.finalReindeerReached();
     }
 }

@@ -21,6 +21,14 @@ public class Santa extends Agent {
 
     @Override
     protected void setup() {
+        Object[] args = getArguments();
+
+        if (args != null && args.length > 0) {
+            position = (int[]) args[1];
+        } else {
+            System.out.println("No arguments provided.");
+        }
+
         // Add behavior to handle volunteer requests
         addBehaviour(new HandleVolunteerRequestBehaviour(this));
     }
@@ -50,9 +58,9 @@ public class Santa extends Agent {
         return position;
     }
 
-    public void startAgent(ContainerController mainContainer) {
+    public void startAgent(Object[] args, ContainerController mainContainer) {
         try {
-            AgentController agent = mainContainer.createNewAgent("Santa", "pr2mapAgent.Santa", null);
+            AgentController agent = mainContainer.createNewAgent("Santa", "pr2mapAgent.Santa", args);
             agent.start(); // Start the agent
         } catch (Exception e) {
             e.printStackTrace();

@@ -60,7 +60,7 @@ public class Main {
 //                profile.setParameter(Profile.GUI, "true");
                 ContainerController mainContainer = jadeRuntime.createMainContainer(profile);
 
-                santa.startAgent(mainContainer);
+                santa.startAgent(arguments, mainContainer);
                 rudolph.startAgent(arguments, mainContainer);
                 translator.startAgent(mainContainer);
                 scout.startAgent(arguments, mainContainer);

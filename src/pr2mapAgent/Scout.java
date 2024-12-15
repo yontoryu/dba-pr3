@@ -16,7 +16,8 @@ public class Scout extends Agent {
     private int energy;
     private int[] currentPos;
     private int[] targetPos;
-    private boolean finalState = false;
+    private int[] santaPos;
+    private boolean finalReindeer = false;
     private int state = 1; //commState = 0 --> Walking
     private String secretCode;
     private int pace;
@@ -31,10 +32,11 @@ public class Scout extends Agent {
     protected void setup() {
         // Retrieve startup arguments
         Object[] args = getArguments();
-        pace = 30;
+        pace = 20;
 
         if (args != null && args.length > 0) {
             energy = -2;
+            santaPos = (int[]) args[1];
             env = (Environment) args[2];
             setCurrentPos(((int[]) args[0]).clone());
 //            System.out.println("Agent started with argument: Start - " + currentPos[0] + ", " + currentPos[1] + ", End - " + targetPos[0] + ", " + targetPos[1]);
@@ -93,13 +95,14 @@ public class Scout extends Agent {
         return state;
     }
 
-    void isFinalStop(){
-        this.finalState = true;
+    boolean finalReindeerReached() {
+        return stopReached() && finalReindeer;
     }
 
-    boolean finalStopReached() {
-        return stopReached() && finalState;
+    boolean santaReached() {
+        return Arrays.equals(currentPos, santaPos);
     }
+
 
     void startAgent(Object[] args, ContainerController mainContainer) {
         try {
@@ -131,7 +134,7 @@ public class Scout extends Agent {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            listener.onPositionUpdated(oldPos, currentPos, stopReached(), finalStopReached(), energy);
+            listener.onPositionUpdated(oldPos, currentPos, stopReached(), finalReindeerReached(), energy);
         }
     }
 
@@ -149,10 +152,13 @@ public class Scout extends Agent {
     }
 
     public void resetOnNewTarget() {
-        if (!finalStopReached()) {
+        if (santaReached()) {
+            setCommunicationState(5);
+        } else if (!finalReindeerReached()) {
             addBehaviour(new WalkBehaviour(this, env));
             setCommunicationState(4); //continue requesting the reindeer's positions
-        } else {
+        } else if (finalReindeerReached()) {
+            addBehaviour(new WalkBehaviour(this, env));
             setCommunicationState(6); //ask for Santa's position
         }
         env.resetHeuristic();

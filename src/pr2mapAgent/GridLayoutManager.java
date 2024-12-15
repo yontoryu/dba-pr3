@@ -5,12 +5,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.border.LineBorder;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class GridLayoutManager extends JFrame implements PositionListener {
 
@@ -26,7 +24,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
     private BufferedImage obstacleImage; // Image of obstacles (walls)
     private BufferedImage endImage; // Image of the target
 
-    private boolean endSet = false;
+    private boolean santaSet = false;
     private boolean startSet = false;
     private boolean positionsSet = false;
     private int[] startPos = new int[2];
@@ -120,39 +118,39 @@ public class GridLayoutManager extends JFrame implements PositionListener {
     }
 
     public void onPositionUpdated(int[] oldPos, int[] currentPos, boolean stopReached, boolean targetReached, int energy) {
-        if (!startSet/* || !endSet*/) {
-            JOptionPane.showMessageDialog(this, "Please set start position.");
+        if (!startSet || !santaSet) {
+            JOptionPane.showMessageDialog(this, "Please set scout and santa position.");
             return;
         }
 
         if (targetReached) {
             squares[currentPos[1]][currentPos[0]].setTarget(false);
-            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
-            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            squares[oldPos[1]][oldPos[0]].setScout(false);
+            squares[currentPos[1]][currentPos[0]].setScout(true);
             gridPanel.repaint();
             JOptionPane.showMessageDialog(null, "Scout reached the target with an energy of " + energy + ".");
 
         } else if (stopReached) {
             squares[currentPos[1]][currentPos[0]].setTarget(false);
-            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
-            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            squares[oldPos[1]][oldPos[0]].setScout(false);
+            squares[currentPos[1]][currentPos[0]].setScout(true);
             gridPanel.repaint();
             JOptionPane.showMessageDialog(null, "Scout reached stop with an energy of " + energy + ".");
 
         } else if (!Arrays.equals(oldPos, currentPos)) {
 //            System.out.println("Scout moved from [" + oldPos[0] + ", " + oldPos[1] + "] to [" + currentPos[0] + ", " + currentPos[1] + "]");
-            squares[oldPos[1]][oldPos[0]].setRaccoon(false);
-            squares[currentPos[1]][currentPos[0]].setRaccoon(true);
+            squares[oldPos[1]][oldPos[0]].setScout(false);
+            squares[currentPos[1]][currentPos[0]].setScout(true);
             gridPanel.repaint();
         }
     }
 
     private void resetPositions() {
         startSet = false;
-        endSet = false;
+        santaSet = false;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                squares[i][j].setRaccoon(false);
+                squares[i][j].setScout(false);
                 squares[i][j].setTarget(false);
             }
         }
@@ -173,7 +171,7 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (map.getMatrix()[row][col] == -1) {
-                        JOptionPane.showMessageDialog(null, "Obstacle cell. Cannot place raccoon or target here.");
+                        JOptionPane.showMessageDialog(null, "Obstacle cell. Cannot place scout or santa here.");
                         return;
                     }
                     // Set start position if not set
@@ -184,22 +182,22 @@ public class GridLayoutManager extends JFrame implements PositionListener {
                         startSet = true;
                     }
                     // Set target position if not set and it's not the start position
-                    /* else if (!endSet) {
+                    else if (!santaSet) {
                         if (row == startPos[0] && col == startPos[1]) {
-                            JOptionPane.showMessageDialog(null, "The target position cannot be the same as the start position.");
+                            JOptionPane.showMessageDialog(null, "The santa position cannot be the same as the scout position.");
                         } else {
                             endPos[0] = col;
                             endPos[1] = row;
                             hasTarget = true;
-                            endSet = true;
+                            santaSet = true;
                         }
-                    }*/
+                    }
                     gridPanel.repaint();
                 }
             });
         }
 
-        public void setRaccoon(boolean hasRaccoon) {
+        public void setScout(boolean hasRaccoon) {
             this.hasRaccoon = hasRaccoon;
         }
 

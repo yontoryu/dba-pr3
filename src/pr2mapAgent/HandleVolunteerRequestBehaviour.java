@@ -72,21 +72,7 @@ public class HandleVolunteerRequestBehaviour extends Behaviour {
                     ACLMessage reply = msg.createReply();
 
                     reply.setPerformative(ACLMessage.INFORM);
-
-                    int[] santaPosition = santa.getPosition();
-
-                    String content = msg.getContent();
-                    String agentPositionStr = content.substring(content.indexOf("position (") + 10, content.indexOf(")"));
-                    String[] parts = agentPositionStr.split(",\\s*");
-                    int[] agentPosition = {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
-
-                    if (!(santaPosition[0] == agentPosition[0] && santaPosition[1] == agentPosition[1])) {
-                        System.out.println("Error: Agent reached wrong position");
-                        myAgent.doDelete();
-                    }
-
                     reply.setContent("Hyvää joulua HoHoHo! Nähdään pian");
-
 
                     finished = true;
                     myAgent.send(reply);
