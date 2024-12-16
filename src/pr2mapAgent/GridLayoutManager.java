@@ -48,8 +48,8 @@ public class GridLayoutManager extends JFrame implements PositionListener {
         try {
             grassImage = ImageIO.read(new File("snow.png"));
             raccoonImage = ImageIO.read(new File("agent.png"));
-            obstacleImage = ImageIO.read(new File("grass.png"));
-            endImage = ImageIO.read(new File("house.jpg"));
+            obstacleImage = ImageIO.read(new File("wall.png"));
+            endImage = ImageIO.read(new File("house.png"));
 
             stopImages = Arrays.asList(
                     ImageIO.read(new File("deer.png")),

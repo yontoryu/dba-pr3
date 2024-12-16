@@ -4,7 +4,13 @@
       <root url="jar://$USER_HOME$/JADE-all-4.6.0/JADE-bin-4.6.0/jade/lib/jade.jar!/" />
       <root url="jar://$USER_HOME$/OneDrive/Área de Trabalho/jade/jadebin/lib/jade.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/../JADE-all-4.6.0/JADE-doc-4.6.0/jade/doc/api" />
+      <root url="file://$PROJECT_DIR$/../JADE-all-4.6.0/JADE-doc-4.6.0/jade/doc/tools/sniffer/html/jdoc" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../JADE-all-4.6.0/JADE-examples-4.6.0/jade/src" />
+      <root url="file://$PROJECT_DIR$/../JADE-all-4.6.0/JADE-src-4.6.0/jade/src" />
+    </SOURCES>
   </library>
 </component>
